@@ -5,6 +5,7 @@ import boxen from "boxen";
 import ora from "ora";
 import inquirer from "inquirer";
 import Conf from "conf";
+import { listenCommand } from "./commands/webhooks/listen.js";
 
 const program = new Command();
 const config = new Conf({ projectName: "payark" });
@@ -81,5 +82,7 @@ program
     config.clear();
     console.log(chalk.green("Logged out successfully."));
   });
+
+program.addCommand(listenCommand);
 
 program.parse(process.argv);
