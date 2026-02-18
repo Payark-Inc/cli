@@ -49,50 +49,66 @@ export const listenCommand = new Command("listen")
 
     const spinner = ora("Connecting to PayArk Edge Realtime...").start();
 
-    // In a real implementation, this would connect to wss://api.payark.com/v1/realtime
-    // For now, we'll mock the WebSocket connection to a non-existent endpoint for scaffolding
-    const wsUrl = "wss://payark-realtime-mock.codimo.workers.dev";
+    // Use the provided development worker URL
+    const wsUrl = `wss://payark-api.codimo-dev.workers.dev/v1/realtime?token=${token}`;
 
-    // Simulating connection logic as we haven't built the WS server yet
-    setTimeout(() => {
+    const ws = new WebSocket(wsUrl);
+
+    ws.on("open", () => {
       spinner.succeed(chalk.green("Ready! Listening for events..."));
       console.log(
         chalk.gray("Trigger a test webhook to see it appear here.\n"),
       );
+    });
 
-      // Mock an event arriving after 3 seconds for demo purposes
-      setTimeout(() => {
-        const mockEvent = {
-          id: "evt_123456789",
-          type: "payment.succeeded",
-          created_at: new Date().toISOString(),
-          data: {
-            id: "pay_987654321",
-            amount: 1500,
-            currency: "NPR",
-            status: "COMPLETED",
-            provider: "esewa",
-          },
-        };
+    ws.on("message", async (data: any) => {
+      try {
+        const message = JSON.parse(data.toString());
+
+        // Ignore system messages
+        if (message.type === "system") {
+          // console.log(chalk.blue(`ℹ️  ${message.message}`));
+          return;
+        }
 
         console.log(
           chalk.bold.hex("#10b981")(
-            `200 OK  [${new Date().toLocaleTimeString()}]  ${mockEvent.type}`,
+            `200 OK  [${new Date().toLocaleTimeString()}]  ${message.type}`,
           ),
         );
-        console.log(JSON.stringify(mockEvent, null, 2));
+        console.log(JSON.stringify(message, null, 2));
 
         if (options.url) {
           console.log(chalk.gray(`\n--> Forwarding to ${options.url}...`));
-          // fetch(options.url, { method: "POST", body: JSON.stringify(mockEvent) })
-          //   .then(res => console.log(chalk.green(`<-- ${res.status} ${res.statusText}`)))
-          //   .catch(err => console.log(chalk.red(`<-- Connection Failed: ${err.message}`)));
+          try {
+            const res = await fetch(options.url, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(message),
+            });
 
-          // Mock success
-          console.log(chalk.green(`<-- 200 OK`));
+            if (res.ok) {
+              console.log(chalk.green(`<-- ${res.status} ${res.statusText}`));
+            } else {
+              console.log(chalk.red(`<-- ${res.status} ${res.statusText}`));
+            }
+          } catch (err: any) {
+            console.log(chalk.red(`<-- Connection Failed: ${err.message}`));
+          }
         }
-      }, 3000);
-    }, 1500);
+      } catch (e) {
+        console.log(chalk.red("Error parsing message:"), data.toString());
+      }
+    });
+
+    ws.on("error", (err: any) => {
+      spinner.fail(chalk.red(`WebSocket Error: ${err.message}`));
+    });
+
+    ws.on("close", () => {
+      console.log(chalk.yellow("\nDisconnected from PayArk Edge."));
+      process.exit(0);
+    });
 
     // Keep process alive
     await new Promise(() => {});
