@@ -67,7 +67,6 @@ export const listenCommand = new Command("listen")
 
         // Ignore system messages
         if (message.type === "system") {
-          // console.log(chalk.blue(`ℹ️  ${message.message}`));
           return;
         }
 
@@ -96,7 +95,7 @@ export const listenCommand = new Command("listen")
             console.log(chalk.red(`<-- Connection Failed: ${err.message}`));
           }
         }
-      } catch (e) {
+      } catch (_e) {
         console.log(chalk.red("Error parsing message:"), data.toString());
       }
     });
