@@ -6,6 +6,7 @@ import ora from "ora";
 import inquirer from "inquirer";
 import Conf from "conf";
 import { listenCommand } from "./commands/webhooks/listen.js";
+import { triggerCommand } from "./commands/trigger/index.js";
 
 const program = new Command();
 const config = new Conf({ projectName: "payark" });
@@ -84,5 +85,6 @@ program
   });
 
 program.addCommand(listenCommand);
+program.addCommand(triggerCommand);
 
 program.parse(process.argv);
