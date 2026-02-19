@@ -2,7 +2,7 @@ import { defineConfig } from "tsup";
 
 export default defineConfig({
   entry: ["src/index.ts"],
-  format: ["esm"], // Use ESM for modern node/bun environments
+  format: ["cjs"], // Use CJS for better Node.js compatibility with all dependencies
   clean: true, // Clean dist directory before build
   dts: true, // Generate declaration files
   shims: true, // Add shims for ESM/CJS compatibility
