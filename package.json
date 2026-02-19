@@ -1,15 +1,27 @@
 {
     "name": "@payark/cli",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "description": "The official command-line interface for PayArk.",
     "bin": {
         "payark": "./dist/index.js"
     },
+    "files": [
+        "dist"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Payark-Inc/payark.git",
+        "directory": "packages/cli"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
     "scripts": {
         "dev": "bun run src/index.ts",
-        "build": "tsup src/index.ts --format esm --clean --dts",
+        "build": "tsup",
         "lint": "tsc --noEmit",
-        "test": "bun test"
+        "test": "bun test",
+        "clean": "rm -rf dist"
     },
     "keywords": [
         "payark",
@@ -20,24 +32,22 @@
     ],
     "author": "PayArk Labs",
     "license": "MIT",
-    "dependencies": {
+    "devDependencies": {
         "@payark/sdk": "workspace:*",
+        "@types/inquirer": "^9.0.7",
+        "@types/node": "^25.2.3",
+        "@types/websocket": "^1.0.10",
         "@types/ws": "^8.18.1",
         "boxen": "^7.1.1",
+        "bun-types": "latest",
         "chalk": "^5.3.0",
         "commander": "^12.0.0",
         "conf": "^15.1.0",
         "inquirer": "^9.2.14",
         "ora": "^8.0.1",
-        "ws": "^8.19.0"
-    },
-    "devDependencies": {
-        "@types/inquirer": "^9.0.7",
-        "@types/node": "^25.2.3",
-        "@types/websocket": "^1.0.10",
-        "bun-types": "latest",
         "tsup": "^8.0.2",
-        "typescript": "^5.3.3"
+        "typescript": "^5.3.3",
+        "ws": "^8.19.0"
     },
     "type": "module"
 }
