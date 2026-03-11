@@ -7,6 +7,7 @@ import inquirer from "inquirer";
 import Conf from "conf";
 import { listenCommand } from "./commands/webhooks/listen.js";
 import { triggerCommand } from "./commands/trigger/index.js";
+import { initCommand } from "./commands/init/index.js";
 
 const program = new Command();
 const config = new Conf({ projectName: "payark" });
@@ -84,6 +85,7 @@ program
     console.log(chalk.green("Logged out successfully."));
   });
 
+program.addCommand(initCommand);
 program.addCommand(listenCommand);
 program.addCommand(triggerCommand);
 

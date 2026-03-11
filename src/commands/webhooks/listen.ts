@@ -50,7 +50,7 @@ export const listenCommand = new Command("listen")
     const spinner = ora("Connecting to PayArk Edge Realtime...").start();
 
     // Use the provided development worker URL
-    const wsUrl = `wss://payark-api.codimo-dev.workers.dev/v1/realtime?token=${token}`;
+    const wsUrl = `wss://api.payark.dev/v1/realtime?token=${token}`;
 
     const ws = new WebSocket(wsUrl);
 

@@ -1,6 +1,6 @@
 {
     "name": "@payark/cli",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "The official command-line interface for PayArk.",
     "bin": {
         "payark": "dist/index.js"
